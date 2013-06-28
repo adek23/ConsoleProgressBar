@@ -104,7 +104,7 @@ class ConsoleProgressBar
 	/**
 	 * @param   integer  $current  current position of the progress counter
 	 */
-	protected $current;
+	protected $current = 1;
 
 	/**
 	 * Time when the bar was last drawn

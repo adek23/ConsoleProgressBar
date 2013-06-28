@@ -5,10 +5,11 @@ use Elkuku\Console\Helper\ConsoleProgressBar;
 
 print "A more complicated bar, showing current status in numbers as well:\n";
 
-$bar = new ConsoleProgressBar('%bar%', '=', ' ', 76, 3);
+$bar = new ConsoleProgressBar('%bar%', '=', ' ', 76);
 
 // let's assume we have a bar object we want to reuse
-$bar->reset('* %fraction% [%bar%] %percent%', '=>', '-', 76, 7);
+$bar->reset('* %fraction% [%bar%] %percent%', '=>', '-', 76);
+$bar->setMax(7);
 
 for ($i = 0; $i <= 7; $i++)
 {
