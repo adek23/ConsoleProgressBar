@@ -34,6 +34,7 @@ namespace Elkuku\Console\Helper;
  * @category  Console
  * @package   Console_ProgressBar
  * @author    Stefan Walk <et@php.net>
+ * @fork      Adrian Zurek <adek.nuvo@gmail.com>
  * @license   MIT License
  * @since     ¿
  */
