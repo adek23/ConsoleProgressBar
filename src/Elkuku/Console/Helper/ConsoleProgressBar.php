@@ -333,7 +333,7 @@ class ConsoleProgressBar
 		}
 
 		$this->current = 1;
-		
+
 		$this->recalc();
 	}
 
@@ -346,6 +346,8 @@ class ConsoleProgressBar
 	 */
 	public function update($current)
 	{
+		$this->current = $current;
+
 		$time = $this->fetchTime();
 		$this->addDataPoint($current, $time);
 
