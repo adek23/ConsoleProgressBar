@@ -221,6 +221,7 @@ class ConsoleProgressBar
 	 */
 	public function reset($formatString, $bar, $preFill, $width, $options = array())
 	{
+		$this->current = 1;
 		$this->formatString = $formatString;
 		$this->barString = $bar;
 		$this->preFill = $preFill;
@@ -331,6 +332,8 @@ class ConsoleProgressBar
 			$this->targetNum = $targetNum;
 		}
 
+		$this->current = 1;
+		
 		$this->recalc();
 	}
 
@@ -343,8 +346,6 @@ class ConsoleProgressBar
 	 */
 	public function update($current)
 	{
-		$this->current = $current;
-
 		$time = $this->fetchTime();
 		$this->addDataPoint($current, $time);
 
