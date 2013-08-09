@@ -152,6 +152,7 @@ class ConsoleProgressBar
 	 *     %fraction%    The same as %current%/%max%
 	 *     %percent%     The status in percent
 	 *     %elapsed%     The elapsed time
+	 *     %tempo%       Tempo (items / per second)
 	 *     %estimate%    An estimate of how long the progress will take
 	 *   More placeholders will follow. A format string like:
 	 *   "* stuff.tar %fraction% KB [%bar%] %percent%"
@@ -183,6 +184,8 @@ class ConsoleProgressBar
 	 *     --------------------------------------------------------------------
 	 *     percent_precision  | 2     |  Number of decimal places to show when
 	 *                        |       |  displaying the percentage.
+	 *     speed_precision    | 2     |  Number of decimal places to show when
+	 *                        |       |  displaying speed.
 	 *     fraction_precision | 0     |  Number of decimal places to show when
 	 *                        |       |  displaying the current or target
 	 *                        |       |  number.
@@ -229,6 +232,7 @@ class ConsoleProgressBar
 
 		$default_options = array(
 			'percent_precision'  => 2,
+			'speed_precision'    => 2,
 			'fraction_precision' => 0,
 			'percent_pad'        => ' ',
 			'fraction_pad'       => ' ',
@@ -281,6 +285,8 @@ class ConsoleProgressBar
 
 		$perc = '%4$\'' . $this->options['percent_pad']{0} . $padding . '.'
 			. $this->options['percent_precision'] . 'f';
+		$speed = '%7$\'' . $this->options['percent_pad']{0} . $padding . '.'
+			. $this->options['speed_precision'] . 'f';
 
 		$transitions = array(
 			'%%'         => '%%',
@@ -291,11 +297,12 @@ class ConsoleProgressBar
 			'%bar%'      => '%1$s',
 			'%elapsed%'  => '%5$s',
 			'%estimate%' => '%6$s',
+			'%speed%'  => $speed . '/s'
 		);
 
 		$this->skeleton = strtr($this->formatString, $transitions);
 
-		$sLen = strlen(sprintf($this->skeleton, '', 0, 0, 0, '00:00:00', '00:00:00'));
+		$sLen = strlen(sprintf($this->skeleton, '', 0, 0, 0, '00:00:00', '00:00:00', 0));
 
 		if ($this->options['width_absolute'])
 		{
@@ -333,7 +340,7 @@ class ConsoleProgressBar
 		}
 
 		$this->current = 1;
-
+		
 		$this->recalc();
 	}
 
@@ -376,6 +383,11 @@ class ConsoleProgressBar
 		$this->lastUpdateTime = $time;
 	}
 
+	public function finish()
+	{
+		echo "\n";
+	}
+
 	public function advance($step = 1)
 	{
 		$this->update($this->current + $step);
@@ -399,9 +411,9 @@ class ConsoleProgressBar
 		$visBar   = substr($this->bar, $this->barLen - $filled, $this->barLen);
 		$elapsed  = $this->formatSeconds($this->fetchTime() - $this->startTime);
 		$estimate = $this->formatSeconds($this->generateEstimate());
-
+		$speed = $current / ($this->fetchTime() - $this->startTime);
 		$this->rLen = printf(
-			$this->skeleton, $visBar, $current, $this->targetNum, $percent * 100, $elapsed, $estimate
+			$this->skeleton, $visBar, $current, $this->targetNum, $percent * 100, $elapsed, $estimate, $speed
 		);
 
 		// Fix for php-versions where printf doesn't return anything
